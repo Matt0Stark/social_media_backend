@@ -10,18 +10,19 @@ const reactionSchema = new Schema(
       type: String,
       required: true,
       maxlength: 280,
-      // minlength: 4,
-      // default: 'Unnamed assignment',
+    
     },
     username: {
       type: String,
       required: true,
-      // default: () => Math.floor(Math.random() * (100 - 70 + 1) + 70),
+      
     },
     createdAt: {
       type: Date,
       default: Date.now,
-      //use a getter method to format the timestamp on query
+      get: (time)=>{
+        return new Date (time).toLocaleDateString()
+      }
     },
   },
   {
@@ -32,4 +33,4 @@ const reactionSchema = new Schema(
   }
 );
 
-module.exports = assignmentSchema;
+module.exports = reactionSchema;
