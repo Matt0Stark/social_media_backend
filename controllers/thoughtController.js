@@ -1,28 +1,8 @@
 const { ObjectId } = require('mongoose').Types;
 const { Thought, User } = require('../models');
 
-// Aggregate function to get the number of thoughts overall
-const headCount = async () => {
-  const numberOfThoughts = await Thought.aggregate()
-    .count('thoughtCount');
-  return numberOfThoughts;
-}
 
-// Aggregate function for getting the overall grade using $avg
-const grade = async (thoughtId) =>
-  Thought.aggregate([
-    // only include the given thought by using $match
-    { $match: { _id: new ObjectId(thoughtId) } },
-    {
-      $unwind: '$reactions',
-    },
-    {
-      $group: {
-        _id: new ObjectId(thoughtId),
-        overallGrade: { $avg: '$reactions.score' },
-      },
-    },
-  ]);
+
 
 module.exports = {
   // Get all thoughts
@@ -32,7 +12,6 @@ module.exports = {
 
       const thoughtObj = {
         thoughts,
-        headCount: await headCount(),
       };
 
       res.json(thoughtObj);
@@ -53,7 +32,6 @@ module.exports = {
 
       res.json({
         thought,
-        grade: await grade(req.params.thoughtId),
       });
     } catch (err) {
       console.log(err);
