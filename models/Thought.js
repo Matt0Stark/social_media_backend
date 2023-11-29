@@ -17,10 +17,9 @@ const thoughtSchema = new Schema(
         return new Date (time).toLocaleDateString()
       }
     },
-    username: {
-      type: String,
-      required: true,
-      
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     },
     reactions: [reactionSchema],
   },

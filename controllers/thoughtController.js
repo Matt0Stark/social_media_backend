@@ -41,7 +41,9 @@ module.exports = {
   // create a new thought
   async createThought(req, res) {
     try {
-      const thought = await Thought.create(req.body);
+      const thought = (await Thought.create(req.body)).populate({ path: 'userId', select: 'username -_id'});
+      const user = await User.findOneAndUpdate({ _id: req.body.userId}, { $push: { thoughts: thought}})
+      console.log(user)
       res.json(thought);
     } catch (err) {
       res.status(500).json(err);
