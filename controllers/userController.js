@@ -68,4 +68,47 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // Add an reaction to a friend
+  async addFriend(req, res) {
+    console.log('You are adding an friend');
+
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: 'No user found with that ID :(' });
+      }
+
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  // Remove friend from a user
+  async removeFriend(req, res) {
+    try {
+      console.log('Bye bye beebert')
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: req.params.friendId } },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: 'No thought found with that ID :(' });
+      }
+
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
 };
